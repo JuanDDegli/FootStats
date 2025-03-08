@@ -77,13 +77,17 @@ const FilterButton = ({ active, onClick, icon, label }: FilterButtonProps) => {
 }
 
 const Status = ({
-  matchesList,
-  matchesListfinished,
+  matchesList = [],
+  matchesListfinished = [],
 }: { matchesList: matchesType[]; matchesListfinished: matchesType[] }) => {
-  const [filter, setFilter] = useState<FilterOption>(() => "all")
-  const [isLoading, setIsLoading] = useState(false)
+  if (!Array.isArray(matchesList) || !Array.isArray(matchesListfinished)) {
+    return <div>Erro: Dados inválidos</div>;
+  }
 
-  const allMatches = [...matchesList, ...matchesListfinished]
+  const [filter, setFilter] = useState<FilterOption>("all");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const allMatches = [...matchesList, ...matchesListfinished];
 
   // Simulate loading state when changing filters
   useEffect(() => {
