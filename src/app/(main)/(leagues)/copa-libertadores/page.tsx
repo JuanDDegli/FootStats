@@ -3,12 +3,14 @@ import Status from "@/components/status"
 
 
 const CopaLibertadores = async () => {
-  const getCopaLibertadores = await filterLeague('Libertadores')
+  const getCopaLibertadores = await filterLeague('Libertadores');
+  const matchesList = Array.isArray(getCopaLibertadores) ? getCopaLibertadores : [];
+  
   return (
-    <div >
-      <Status matchesList={getCopaLibertadores} matchesListfinished={[]} />
+    <div>
+      <Status matchesList={matchesList} matchesListfinished={[]} />
     </div>
-  )
+  );
 }
 
 export default CopaLibertadores

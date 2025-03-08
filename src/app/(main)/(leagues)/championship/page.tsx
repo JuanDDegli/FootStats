@@ -2,12 +2,14 @@ import { filterLeague } from '@/api'
 import Status from '@/components/status'
 
 const Championship = async () => {
-  const getChampionship = await filterLeague('Championship')
+  const getChampionship = await filterLeague('Championship');
+  const matchesList = Array.isArray(getChampionship) ? getChampionship : [];
+  
   return (
-    <div >
-      <Status matchesList={getChampionship} matchesListfinished={[]} />
+    <div>
+      <Status matchesList={matchesList} matchesListfinished={[]} />
     </div>
-  )
+  );
 }
 
-export default Championship
+export default Championship;
