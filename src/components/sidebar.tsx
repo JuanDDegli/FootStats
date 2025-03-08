@@ -16,7 +16,7 @@ import LinkSide from "./linkSide";
   ];
   const Sidebar:FC = async() => {
     return ( 
-<section className="px-2 w-60 md:px-4 py-2 bg-white border-2 rounded-md h-screen">
+    <section className="px-2 w-60 md:w-72 py-2 bg-white border-2 rounded-md h-screen">
       <div className="mb-4 ">
      <h1 className="font-bold text-xl mb-4
                     bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500

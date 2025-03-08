@@ -6,8 +6,8 @@ import Image from 'next/image';
 
 const News = async () => {
     const getNews = await getNewsInfo()
+    const newsData: newsType[] = Array.isArray(getNews.articles) ? getNews.articles : [];
 
-    const newsData: newsType[] = getNews.articles
 
     return (
         
