@@ -81,9 +81,11 @@ const FilterButton = ({ active, onClick, icon, label }: FilterButtonProps) => {
 const Status = ({
   matchesList = [],
   matchesListfinished = [],
+  leagueTitle = "",
 }: {
   matchesList: matchesType[]
   matchesListfinished: matchesType[]
+  leagueTitle?: string
 }) => {
   const [filter, setFilter] = useState<FilterOption>("all")
   const [isLoading, setIsLoading] = useState(false)
@@ -123,6 +125,13 @@ const Status = ({
 
   return (
     <div className="space-y-6 w-full">
+      {/* Título da Liga */}
+      {leagueTitle && (
+        <div className="mb-4">
+          <h1 className="text-2xl font-bold text-slate-800">{leagueTitle}</h1>
+        </div>
+      )}
+
       {/* Botões de filtro */}
       <div className="sticky z-10 bg-slate-50 pt-3 pb-4 px-2 rounded-lg shadow-sm">
         <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">

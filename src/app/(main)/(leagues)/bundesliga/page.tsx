@@ -1,5 +1,6 @@
 import { getMatchesFootball, getMatchesFootballFinished } from "@/api/index"
 import Status from "@/components/status"
+import type { matchesType } from "@/types"
 
 export default async function BundesligaPage() {
   try {
@@ -10,9 +11,22 @@ export default async function BundesligaPage() {
     const matchesDatas = getDatas?.matches || []
     const matchesDatasFinished = getDatasFinished?.matches || []
 
+    // Filtrar apenas jogos da Bundesliga com tipos explícitos
+    const bundesligaMatches = matchesDatas.filter(
+      (match: matchesType) => match?.competition?.name === "Bundesliga" || match?.competition?.code === "BL1",
+    )
+
+    const bundesligaMatchesFinished = matchesDatasFinished.filter(
+      (match: matchesType) => match?.competition?.name === "Bundesliga" || match?.competition?.code === "BL1",
+    )
+
     return (
       <section>
-        <Status matchesList={matchesDatas} matchesListfinished={matchesDatasFinished} />
+        <Status
+          matchesList={bundesligaMatches}
+          matchesListfinished={bundesligaMatchesFinished}
+          leagueTitle="Bundesliga"
+        />
       </section>
     )
   } catch (error) {
