@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
           <ul className="flex flex-col space-y-4 mt-4 px-4">
             <li>
               <Link
-                href="/home"
+                href="/"
                 className="text-[#6A5ACD] hover:text-gray-400 transition duration-300 block"
                 onClick={toggleMenu}
               >

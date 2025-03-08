@@ -10,13 +10,14 @@ import LinkSide from "./linkSide";
     { id: 6, name: "Primeira Liga", href: "primeira-liga", logo: "/logos/liga_portugal.webp" },
     { id: 7, name: "Championship", href: "championship", logo: "/logos/championship.webp" },
     { id: 8, name: "Eredivisie", href: "eredivisie", logo: "/logos/eredivisie.svg" },
-    { id: 9, name: "Brasileirão Serie A", href: "brasileirao", logo: "/logos/brazilian_serie_a.webp" },
+    { id: 9, name: "Champions League", href: "champions-league", logo: "/logos/champions-league.png" },
     { id: 10, name: "Libertadores", href: "copa-libertadores", logo: "/logos/copa_libertadores.webp" },
+
   ];
   const Sidebar:FC = async() => {
     return ( 
-<section className="px-2 md:px-4 py-2 bg-white border-2 rounded-md h-screen ">
-      <div>
+<section className="px-2 w-60 md:px-4 py-2 bg-white border-2 rounded-md h-screen ">
+      <div className="mb-4 ">
      <h1 className="font-bold text-xl mb-4
                     bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500
                     bg-clip-text text-transparent animate-gradient-move"> 

@@ -57,9 +57,6 @@ const Status = ({
     const tomorrow = new Date(today)
     tomorrow.setDate(today.getDate() + 1)
 
-    if (filter === "today") {
-      return matchDate.toDateString() === today.toDateString()
-    }
     if (filter === "finished") {
       return match.status === "FINISHED"
     }
@@ -77,12 +74,6 @@ const Status = ({
           onClick={() => setFilter("all")}
         >
           Todos
-        </button>
-        <button
-          className={`px-4 py-2 rounded-md text-sm font-bold whitespace-nowrap ${filter === "today" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
-          onClick={() => setFilter("today")}
-        >
-          Jogos de Hoje
         </button>
         <button
           className={`px-4 py-2 rounded-md text-sm font-bold whitespace-nowrap ${filter === "finished" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
