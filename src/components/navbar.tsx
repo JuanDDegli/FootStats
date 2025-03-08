@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
         {/* Desktop menu */}
         <ul className="hidden md:flex space-x-6">
           <li>
-            <Link href="/home" className="text-[#6A5ACD] font-semibold hover:text-gray-300 transition duration-300">
+            <Link href="/" className="text-[#6A5ACD] font-semibold hover:text-gray-300 transition duration-300">
               Home
             </Link>
           </li>
