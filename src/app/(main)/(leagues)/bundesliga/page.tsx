@@ -7,8 +7,10 @@ const Bundesliga = async () => {
 
   // Verifique se os dados retornados são um array válido
   const matchesList = Array.isArray(getBundesliga) ? getBundesliga : [];
-  
-  // Garanta que matchesListfinished seja um array vazio se não houver dados
+
+  // Verifique a saída para garantir que matchesList não seja undefined
+  console.log(matchesList);
+
   const matchesListfinished: matchesType[] = [];
 
   return (
