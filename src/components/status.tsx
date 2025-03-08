@@ -14,6 +14,7 @@ const groupMatchesByDate = (matches: matchesType[]) => {
   const grouped: { [key: string]: matchesType[] } = {}
 
   matches.forEach((match) => {
+    if (!match || !match.utcDate) return
     const date = new Date(match.utcDate)
     const today = new Date()
     const yesterday = new Date(today)
