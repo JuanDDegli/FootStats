@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FootStats
 
-## Getting Started
+O FootStats é uma plataforma que traz informações sobre as principais ligas de futebol do mundo, exibindo resultados de partidas ao vivo e as últimas notícias do universo do futebol. ⚽🔥
 
-First, run the development server:
+## 🚀 Funcionalidades
+- 📌 Exibição de partidas ao vivo e finalizadas.
+- 📰 Notícias sobre futebol.
+- 🎛️ Sidebar com seleção de ligas
+- 📊 Filtros de partidas por liga e por data.
 
+
+
+## 🛠️ Tecnologias Utilizadas
+- **Next.js** (React + SSR)
+- **TypeScript**
+- **Tailwind CSS**
+- **Football-Data.org API** (dados de jogos e classificações)
+- **NewsAPI** (notícias sobre futebol)
+
+## 📦 Instalação
+
+### 1️⃣ Clone o repositório:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+ git clone https://github.com/JuanDDegli/footstats.git
+ cd footstats
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Instale as dependências:
+```bash
+npm install  # ou yarn install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3️⃣ Configure as variáveis de ambiente:
+Crie um arquivo `.env.local` na raiz do projeto e adicione:
+```bash
+NEXT_PUBLIC_API_KEY=SEU_TOKEN_DA_FOOTBALL_DATA
+NEXT_PUBLIC_NEWS_API_KEY=SEU_TOKEN_DA_NEWS_API
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4️⃣ Rode o projeto localmente:
+```bash
+npm run dev  # ou yarn dev
+```
 
-## Learn More
+## 📜 Estrutura do Projeto
+```plaintext
+📂 footstats
+├── 📂 src
+│   ├── 📂 app  # Páginas do Next.js
+│   ├── 📂 components  # Componentes reutilizáveis
+│   ├── 📂 styles  # Estilos globais
+│   ├── 📂 api  # Funções para chamadas à API
+│   ├── 📂 types  # Tipagens do TypeScript
+├── .env.local.example  # Exemplo de variáveis de ambiente
+├── tailwind.config.ts  # Configuração do Tailwind CSS
+├── next.config.js  # Configuração do Next.js
+├── README.md  # Documentação do projeto
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🌎 Deploy
+O projeto pode ser facilmente implantado no **Vercel**. Para isso:
+1. Crie um repositório no GitHub e suba o projeto.
+2. Acesse [Vercel](https://vercel.com/) e importe o repositório.
+3. Configure as variáveis de ambiente na interface da Vercel.
+4. Faça o deploy automaticamente!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📌 Contribuição
+Sinta-se à vontade para abrir **issues** e enviar **pull requests**! Se quiser contribuir:
+1. **Fork** o repositório.
+2. Crie uma **branch** com sua feature:
+   ```bash
+   git checkout -b minha-feature
+   ```
+3. Faça o commit:
+   ```bash
+   git commit -m "Minha nova feature"
+   ```
+4. Envie o push:
+   ```bash
+   git push origin minha-feature
+   ```
+5. Abra um **Pull Request**!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📄 Licença
+Este projeto está sob a licença MIT. Sinta-se livre para utilizá-lo e modificá-lo! ⚽🚀
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
