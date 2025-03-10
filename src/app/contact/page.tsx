@@ -24,20 +24,10 @@ export default function ContactPage() {
     setIsSubmitting(true)
 
     const { name, email, message } = formData
-
-    // Defina o número de WhatsApp com o DDD (exemplo: +5511999999999)
     const whatsappNumber = "+5522992725785"
-
-    // Cria a mensagem personalizada com nome e email
-    const whatsappMessage = `Olá, meu nome é ${name} (${email}). ${message}`
-    
-    // Codifica a mensagem para ser usada na URL
+    const whatsappMessage = `Olá, meu nome é ${name} e o meu email é (${email}). ${message}`
     const encodedMessage = encodeURIComponent(whatsappMessage)
-
-    // Monta a URL do WhatsApp
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
-
-    // Redireciona para o WhatsApp
     window.location.href = whatsappUrl
 
     setTimeout(() => {

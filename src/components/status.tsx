@@ -9,7 +9,6 @@ import Loader from "./loader"
 import { motion } from "framer-motion"
 import { CheckCircle, ListFilter } from "lucide-react"
 
-// Função para agrupar os jogos por data
 const groupMatchesByDate = (matches: matchesType[]) => {
   if (!Array.isArray(matches) || matches.length === 0) return {}
 
@@ -90,23 +89,18 @@ const Status = ({
   const [filter, setFilter] = useState<FilterOption>("all")
   const [isLoading, setIsLoading] = useState(false)
 
-  // Ensure arrays are valid with default empty arrays
   const safeMatchesList = Array.isArray(matchesList) ? matchesList : []
   const safeMatchesListFinished = Array.isArray(matchesListfinished) ? matchesListfinished : []
-
-  // Combine the arrays safely
   const allMatches = [...safeMatchesList, ...safeMatchesListFinished]
 
-  // Simula o carregamento enquanto troca os filtros
   useEffect(() => {
     setIsLoading(true)
     const timer = setTimeout(() => {
       setIsLoading(false)
-    }, 800) // Carregamento de 800ms
+    }, 800)
     return () => clearTimeout(timer)
   }, [filter])
 
-  // Filtra os jogos conforme o estado selecionado
   const filteredMatches = allMatches.filter((match) => {
     if (!match) return false
 
