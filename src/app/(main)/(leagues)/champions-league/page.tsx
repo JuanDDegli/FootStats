@@ -7,11 +7,10 @@ export default async function ChampionsLeague() {
     const getDatas = await getMatchesFootball()
     const getDatasFinished = await getMatchesFootballFinished()
 
-    // Ensure we have valid data with fallbacks
+
     const matchesDatas = getDatas?.matches || []
     const matchesDatasFinished = getDatasFinished?.matches || []
 
-    // Filtrar apenas jogos da Champions League
     const championsMatches = matchesDatas.filter(
       (match: matchesType) => match?.competition?.name === "UEFA Champions League" || match?.competition?.code === "CL",
     )
