@@ -2,6 +2,8 @@
 
 O FootStats é uma plataforma que traz informações sobre as principais ligas de futebol do mundo, exibindo resultados de partidas ao vivo e as últimas notícias do universo do futebol. ⚽🔥
 
+🔗 Acesse o projeto online: https://footstats-five.vercel.app/primeira-liga
+
 ## 🚀 Funcionalidades
 - 📌 Exibição de partidas ao vivo e finalizadas.
 - 📰 Notícias sobre futebol.
