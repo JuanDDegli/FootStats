@@ -9,7 +9,7 @@ import LinkSide from "./linkSide";
     { id: 5, name: "Ligue 1", href: "ligue-1", logo: "/logos/ligue_1.webp" },
     { id: 6, name: "Primeira Liga", href: "primeira-liga", logo: "/logos/liga_portugal.webp" },
     { id: 7, name: "Championship", href: "championship", logo: "/logos/championship.webp" },
-    { id: 8, name: "Eredivisie", href: "eredivisie", logo: "/logos/eredivisie.svg" },
+    { id: 8, name: "Brasileirão", href: "brasileirao", logo: "/logos/brazilian_serie_a.webp" },
     { id: 9, name: "Champions League", href: "champions-league", logo: "/logos/champions-league.png" },
     { id: 10, name: "Libertadores", href: "copa-libertadores", logo: "/logos/copa_libertadores.webp" },
 

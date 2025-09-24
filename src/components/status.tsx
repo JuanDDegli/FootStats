@@ -7,7 +7,7 @@ import Competition from "./competition"
 import { useState, useEffect } from "react"
 import Loader from "./loader"
 import { motion } from "framer-motion"
-import { CheckCircle, ListFilter } from "lucide-react"
+import { ArrowDownRightIcon, CheckCircle, ListFilter } from "lucide-react"
 
 const groupMatchesByDate = (matches: matchesType[]) => {
   if (!Array.isArray(matches) || matches.length === 0) return {}
@@ -38,7 +38,7 @@ const groupMatchesByDate = (matches: matchesType[]) => {
   return grouped
 }
 
-type FilterOption = "all" | "finished"
+type FilterOption = "all" | "finished" | "upcoming"
 
 interface FilterButtonProps {
   active: boolean
@@ -80,10 +80,12 @@ const FilterButton = ({ active, onClick, icon, label }: FilterButtonProps) => {
 const Status = ({
   matchesList = [],
   matchesListfinished = [],
+  matchesUpcoming = [],
   leagueTitle = "",
 }: {
   matchesList: matchesType[]
   matchesListfinished: matchesType[]
+  matchesUpcoming: matchesType[]
   leagueTitle?: string
 }) => {
   const [filter, setFilter] = useState<FilterOption>("all")
@@ -101,19 +103,18 @@ const Status = ({
     return () => clearTimeout(timer)
   }, [filter])
 
-  const filteredMatches = allMatches.filter((match) => {
-    if (!match) return false
-
-    const matchDate = match.utcDate ? new Date(match.utcDate) : null
-    const today = new Date()
-    const tomorrow = new Date(today)
-    tomorrow.setDate(today.getDate() + 1)
-
-    if (filter === "finished") {
-      return match.status === "FINISHED"
-    }
-    return true
-  })
+const filteredMatches = (() => {
+  switch (filter) {
+    case "finished":
+      return safeMatchesListFinished.filter((match) => match.status === "FINISHED");
+  case "upcoming":
+  return Array.isArray(matchesUpcoming)
+    ? matchesUpcoming.filter((match) => match.status === "SCHEDULED" || match.status === "TIMED")
+    : [];
+    default:
+      return allMatches;
+  }
+})();
 
   const groupedMatches = groupMatchesByDate(filteredMatches)
 
@@ -140,6 +141,12 @@ const Status = ({
             onClick={() => setFilter("finished")}
             icon={<CheckCircle className="w-4 h-4" />}
             label="Finalizados"
+          />
+          <FilterButton
+            active={filter === "upcoming"}
+            onClick={() => setFilter("upcoming")}
+            icon={<ArrowDownRightIcon className="w-4 h-4" />}
+            label="Próximos"
           />
         </div>
       </div>
