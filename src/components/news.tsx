@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { getNewsInfo } from '@/api';
+import { getNewsInfo } from '@/api'; // Remova esta linha se getNewsInfo não for mais usada em nenhum outro lugar
 import { newsType } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -13,40 +13,48 @@ const News = () => {
 
     useEffect(() => {
         const fetchNews = async () => {
-            const getNews = await getNewsInfo();
-            const articles: newsType[] = Array.isArray(getNews.articles) ? getNews.articles : [];
-            setNewsData(articles);
+            try {
+                // ✅ Chamada para a sua nova API Route interna
+                const response = await fetch('/api/news');
+                const data = await response.json();
+
+                if (response.ok && data.articles) {
+                    setNewsData(data.articles);
+                } else {
+                    // Se houver um erro, ele será logado no console do navegador
+                    console.error("Erro ao buscar notícias:", data.error);
+                    setNewsData([]);
+                }
+            } catch (error) {
+                console.error("Falha na requisição para /api/news", error);
+                setNewsData([]);
+            }
         };
         fetchNews();
     }, []);
 
     const nextNews = useCallback(() => {
+        if (newsData.length === 0) return; // Previne erro se não houver notícias
         setCurrentIndex((prevIndex) => (prevIndex + 1) % newsData.length);
     }, [newsData.length]);
 
     const prevNews = () => {
+        if (newsData.length === 0) return; // Previne erro se não houver notícias
         setCurrentIndex((prevIndex) => (prevIndex - 1 + newsData.length) % newsData.length);
     };
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (window.innerWidth <= 768) { // Only auto-slide on mobile
-                nextNews();
-            }
-        }, 5000); // 5 seconds
-        return () => clearInterval(interval);
-    }, [nextNews]);
-
+    // ... o resto do seu componente continua igual
+    
     return (
         <div className='w-full md:w-[300px] bg-white rounded-md px-2 md:px-6 py-2 flex flex-col'>
             <h1 className='text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-move font-bold mb-4'>News - Top Headlines</h1>
             
             {/* Mobile Carousel */}
             <div className="md:hidden relative">
-                {newsData.length > 0 && (
+                {newsData.length > 0 ? (
                     <div className="relative">
                         <Link href={newsData[currentIndex].url} legacyBehavior>
-                            <a target="_blank">
+                            <a target="_blank" rel="noopener noreferrer">
                                 <div className="relative w-full h-[200px] mb-4 transition duration-300 hover:scale-105">
                                     <Image
                                         src={newsData[currentIndex]?.urlToImage || '/imgs/football.jpg'}
@@ -67,14 +75,14 @@ const News = () => {
                             <ChevronRight size={24} />
                         </button>
                     </div>
-                )}
+                ) : <p className="text-center text-gray-500">Carregando notícias...</p>}
             </div>
 
             {/* Desktop List */}
             <div className="hidden md:flex flex-col gap-4">
-                {newsData.map((news) => (
+                 {newsData.length > 0 ? newsData.map((news) => (
                     <Link key={`${news.title}`} href={news.url} legacyBehavior>
-                        <a target="_blank">
+                        <a target="_blank" rel="noopener noreferrer">
                             <div className="relative w-full h-[150px] mb-4 transition duration-300 hover:scale-110">
                                 <Image
                                     src={news?.urlToImage != null ? news.urlToImage : '/imgs/football.jpg'}
@@ -88,7 +96,7 @@ const News = () => {
                             </div>
                         </a>
                     </Link>
-                ))}
+                )) : <p className="text-center text-gray-500">Nenhuma notícia para exibir.</p>}
             </div>
         </div>
     );

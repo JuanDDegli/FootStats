@@ -81,6 +81,7 @@ export async function getUpcomingMatchesNext3Days(): Promise<{ matches: matchesT
 
   return data;
 }
+
 export async function getNewsInfo() {
   const newsData = await fetch(
     `https://newsapi.org/v2/everything?apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}&q=soccer&pageSize=10`,
