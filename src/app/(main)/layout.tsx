@@ -13,7 +13,7 @@ export default function MainLayout({
         <div className="hidden md:block">
           <Sidebar />
         </div>
-        <div className="flex-1 max-w-full">{children}</div>
+        <div className="flex-1 bg-slate-200 p-6 rounded-lg shadow-sm max-w-full">{children}</div>
         <div className="w-full md:w-[280px]">
           <News />
         </div>
