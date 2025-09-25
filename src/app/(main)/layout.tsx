@@ -1,6 +1,7 @@
+// src/app/(main)/layout.tsx
 import type React from "react"
 import Sidebar from "@/components/sidebar"
-import News from "@/components/news"
+import StandingsWidget from "@/components/standingsWidget"; // IMPORTAR o novo componente
 
 export default function MainLayout({
   children,
@@ -14,8 +15,8 @@ export default function MainLayout({
           <Sidebar />
         </div>
         <div className="flex-1 bg-slate-200 p-6 rounded-lg shadow-sm max-w-full">{children}</div>
-        <div className="w-full md:w-[280px]">
-          <News />
+        <div className="w-full md:w-[300px]"> {/* A API pede uma largura mínima de 300px */}
+          <StandingsWidget /> {/* ADICIONAR o novo componente aqui */}
         </div>
       </section>
     </main>

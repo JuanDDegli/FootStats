@@ -38,7 +38,7 @@ const News = () => {
     }, [nextNews]);
 
     return (
-        <div className='w-full md:w-[300px] border-2 bg-white rounded-md px-2 md:px-6 py-2 flex flex-col'>
+        <div className='w-full md:w-[300px] bg-white rounded-md px-2 md:px-6 py-2 flex flex-col'>
             <h1 className='text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-move font-bold mb-4'>News - Top Headlines</h1>
             
             {/* Mobile Carousel */}

@@ -1,8 +1,14 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: ["crests.football-data.org", "www.cnet.com",  "platform.theverge.com", "i.insider.com"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'crests.football-data.org',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
 };
 

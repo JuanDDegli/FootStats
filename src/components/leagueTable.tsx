@@ -10,4 +10,3 @@ const LeagueTable = ({ data }: { data: matchesType }) => {
 }
 
 export default LeagueTable
-
