@@ -1,14 +1,51 @@
-import { filterLeague } from "@/api"
+import {
+  getMatchesFootball,
+  getMatchesFootballFinished,
+  getUpcomingMatchesNext3Days,
+} from "@/api"
 import Status from "@/components/status"
 
-const CopaLibertadores = async () => {
+const GAMES_PER_PAGE = 6
+
+const CopaLibertadores = async ({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) => {
   try {
-    const getCopaLibertadores = await filterLeague("Libertadores")
-    const matchesList = Array.isArray(getCopaLibertadores) ? getCopaLibertadores : []
+    const currentPage = Number(searchParams.page) || 1
+    const liveMatches = await getMatchesFootball()
+    const finishedMatches = await getMatchesFootballFinished()
+    const upcomingMatches = await getUpcomingMatchesNext3Days()
+
+    const matchesList = (liveMatches?.matches || []).filter(
+      (match) => match.competition?.name === "Copa Libertadores"
+    )
+    const matchesListfinished = (finishedMatches?.matches || []).filter(
+      (match) => match.competition?.name === "Copa Libertadores"
+    )
+    const matchesUpcoming = (upcomingMatches?.matches || []).filter(
+      (match) =>
+        (match.status === "SCHEDULED" || match.status === "TIMED") &&
+        match.competition?.name === "Copa Libertadores"
+    )
+
+    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
+    const endIndex = startIndex + GAMES_PER_PAGE
+    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
+
+    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
 
     return (
       <div>
-        <Status matchesList={matchesList} matchesListfinished={[]} leagueTitle="Copa Libertadores" />
+        <Status
+          matchesList={matchesList}
+          matchesListfinished={matchesListfinished}
+          matchesUpcoming={paginatedMatches}
+          leagueTitle="Copa Libertadores"
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     )
   } catch (error) {
@@ -25,4 +62,3 @@ const CopaLibertadores = async () => {
 }
 
 export default CopaLibertadores
-

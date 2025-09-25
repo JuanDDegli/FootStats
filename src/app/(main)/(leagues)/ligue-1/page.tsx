@@ -1,14 +1,51 @@
-import { filterLeague } from "@/api"
+import {
+  getMatchesFootball,
+  getMatchesFootballFinished,
+  getUpcomingMatchesNext3Days,
+} from "@/api"
 import Status from "@/components/status"
 
-const LigueOne = async () => {
+const GAMES_PER_PAGE = 6
+
+const LigueOne = async ({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) => {
   try {
-    const getLigue1 = await filterLeague("Ligue 1")
-    const matchesList = Array.isArray(getLigue1) ? getLigue1 : []
+    const currentPage = Number(searchParams.page) || 1
+    const liveMatches = await getMatchesFootball()
+    const finishedMatches = await getMatchesFootballFinished()
+    const upcomingMatches = await getUpcomingMatchesNext3Days()
+
+    const matchesList = (liveMatches?.matches || []).filter(
+      (match) => match.competition?.name === "Ligue 1"
+    )
+    const matchesListfinished = (finishedMatches?.matches || []).filter(
+      (match) => match.competition?.name === "Ligue 1"
+    )
+    const matchesUpcoming = (upcomingMatches?.matches || []).filter(
+      (match) =>
+        (match.status === "SCHEDULED" || match.status === "TIMED") &&
+        match.competition?.name === "Ligue 1"
+    )
+
+    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
+    const endIndex = startIndex + GAMES_PER_PAGE
+    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
+
+    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
 
     return (
       <div>
-        <Status matchesList={matchesList} matchesListfinished={[]} leagueTitle="Ligue 1" />
+        <Status
+          matchesList={matchesList}
+          matchesListfinished={matchesListfinished}
+          matchesUpcoming={paginatedMatches}
+          leagueTitle="Ligue 1"
+          currentPage={currentPage}
+          totalPages={totalPages}
+        />
       </div>
     )
   } catch (error) {
@@ -25,4 +62,3 @@ const LigueOne = async () => {
 }
 
 export default LigueOne
-

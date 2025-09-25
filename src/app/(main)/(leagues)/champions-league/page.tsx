@@ -1,30 +1,49 @@
-import { getMatchesFootball, getMatchesFootballFinished } from "@/api/index"
+import {
+  getMatchesFootball,
+  getMatchesFootballFinished,
+  getUpcomingMatchesNext3Days,
+} from "@/api/index"
 import Status from "@/components/status"
 import type { matchesType } from "@/types"
 
-export default async function ChampionsLeague() {
+const GAMES_PER_PAGE = 6
+
+export default async function ChampionsLeague({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) {
   try {
+    const currentPage = Number(searchParams.page) || 1
     const getDatas = await getMatchesFootball()
     const getDatasFinished = await getMatchesFootballFinished()
+    const getUpcoming = await getUpcomingMatchesNext3Days()
 
-
-    const matchesDatas = getDatas?.matches || []
-    const matchesDatasFinished = getDatasFinished?.matches || []
-
-    const championsMatches = matchesDatas.filter(
+    const matchesDatas = (getDatas?.matches || []).filter(
       (match: matchesType) => match?.competition?.name === "UEFA Champions League" || match?.competition?.code === "CL",
     )
-
-    const championsMatchesFinished = matchesDatasFinished.filter(
+    const matchesDatasFinished = (getDatasFinished?.matches || []).filter(
       (match: matchesType) => match?.competition?.name === "UEFA Champions League" || match?.competition?.code === "CL",
     )
+    const matchesUpcoming = (getUpcoming?.matches || []).filter(
+      (match: matchesType) => (match.status === "SCHEDULED" || match.status === "TIMED") && (match?.competition?.name === "UEFA Champions League" || match?.competition?.code === "CL"),
+    )
+
+    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
+    const endIndex = startIndex + GAMES_PER_PAGE
+    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
+
+    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
 
     return (
       <section>
         <Status
-          matchesList={championsMatches}
-          matchesListfinished={championsMatchesFinished}
+          matchesList={matchesDatas}
+          matchesListfinished={matchesDatasFinished}
+          matchesUpcoming={paginatedMatches}
           leagueTitle="UEFA Champions League"
+          currentPage={currentPage}
+          totalPages={totalPages}
         />
       </section>
     )
@@ -40,4 +59,3 @@ export default async function ChampionsLeague() {
     )
   }
 }
-

@@ -1,45 +1,71 @@
-import { getMatchesFootball, getMatchesFootballFinished } from "@/api/index"
+// Bundesliga.tsx
+
+import {
+  filterLeague,
+  getUpcomingMatchesNext3Days,
+  getMatchesFootballFinished,
+} from "@/api"
 import Status from "@/components/status"
-import type { matchesType } from "@/types"
 
-export default async function BundesligaPage() {
+// Define o número de jogos por página
+const GAMES_PER_PAGE = 6
+
+// O componente agora recebe 'searchParams' como um prop
+const Bundesliga = async ({
+  searchParams,
+}: {
+  searchParams: { page?: string }
+}) => {
   try {
-    const getDatas = await getMatchesFootball()
-    const getDatasFinished = await getMatchesFootballFinished()
+    const currentPage = Number(searchParams.page) || 1
 
-    // Ensure we have valid data with fallbacks
-    const matchesDatas = getDatas?.matches || []
-    const matchesDatasFinished = getDatasFinished?.matches || []
-
-    // Filtrar apenas jogos da Bundesliga com tipos explícitos
-    const bundesligaMatches = matchesDatas.filter(
-      (match: matchesType) => match?.competition?.name === "Bundesliga" || match?.competition?.code === "BL1",
+    const upcoming = await getUpcomingMatchesNext3Days()
+    const matchesUpcoming = (upcoming?.matches || []).filter(
+      (match) =>
+        (match.status === "SCHEDULED" || match.status === "TIMED") &&
+        match.competition?.name === "Bundesliga"
     )
 
-    const bundesligaMatchesFinished = matchesDatasFinished.filter(
-      (match: matchesType) => match?.competition?.name === "Bundesliga" || match?.competition?.code === "BL1",
+    // Lógica da paginação
+    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
+    const endIndex = startIndex + GAMES_PER_PAGE
+    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
+
+    // Calcula o número total de páginas
+    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
+
+    // Opcional: Busca jogos finalizados para a aba de resultados
+    const getFinished = await getMatchesFootballFinished()
+    const matchesListFinished = (getFinished?.matches || []).filter(
+      (match) => match.competition?.name === "Bundesliga"
     )
 
+    // Aqui, em vez de passar a lista completa, passamos a lista paginada
     return (
-      <section>
+      <div>
         <Status
-          matchesList={bundesligaMatches}
-          matchesListfinished={bundesligaMatchesFinished}
+          matchesList={[]} // Deixamos vazio ou preenchido com dados de jogos em andamento se tiver
+          matchesListfinished={matchesListFinished}
+          matchesUpcoming={paginatedMatches} // A lista de jogos agendados agora está paginada
           leagueTitle="Bundesliga"
+          currentPage={currentPage}
+          totalPages={totalPages}
         />
-      </section>
+      </div>
     )
   } catch (error) {
     console.error("Error fetching Bundesliga data:", error)
-    // Return a fallback UI when data fetching fails
     return (
       <section className="p-4">
         <div className="text-center py-8">
-          <h2 className="text-xl font-semibold mb-2">Unable to load Bundesliga matches</h2>
-          <p className="text-gray-600">Please try again later</p>
+          <h2 className="text-xl font-semibold mb-2">
+            Não foi possível carregar as partidas da Bundesliga
+          </h2>
+          <p className="text-gray-600">Por favor, tente novamente mais tarde</p>
         </div>
       </section>
     )
   }
 }
 
+export default Bundesliga

@@ -1,3 +1,4 @@
+// components/status.tsx
 "use client"
 
 import type React from "react"
@@ -7,7 +8,20 @@ import Competition from "./competition"
 import { useState, useEffect } from "react"
 import Loader from "./loader"
 import { motion } from "framer-motion"
-import { ArrowDownRightIcon, CheckCircle, ListFilter } from "lucide-react"
+import { ArrowDownRightIcon, CheckCircle, ListFilter, Trophy } from "lucide-react"
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
+import Sidebar from "./sidebar"
+
+// Função para remover duplicatas de um array de partidas
+const removeDuplicates = (matches: matchesType[]) => {
+  const map = new Map();
+  for (const match of matches) {
+    if (match && match.id) {
+      map.set(match.id, match);
+    }
+  }
+  return Array.from(map.values());
+};
 
 const groupMatchesByDate = (matches: matchesType[]) => {
   if (!Array.isArray(matches) || matches.length === 0) return {}
@@ -38,7 +52,7 @@ const groupMatchesByDate = (matches: matchesType[]) => {
   return grouped
 }
 
-type FilterOption = "all" | "finished" | "upcoming"
+type FilterOption = "today" | "finished" | "upcoming"
 
 interface FilterButtonProps {
   active: boolean
@@ -77,23 +91,97 @@ const FilterButton = ({ active, onClick, icon, label }: FilterButtonProps) => {
   )
 }
 
+const Pagination = ({
+  totalPages,
+  currentPage,
+}: {
+  totalPages: number
+  currentPage: number
+}) => {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const createPageURL = (pageNumber: number) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("page", pageNumber.toString())
+    return `${pathname}?${params.toString()}`
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      router.push(createPageURL(currentPage + 1))
+    }
+  }
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      router.push(createPageURL(currentPage - 1))
+    }
+  }
+
+  return (
+    <div className="flex items-center justify-center space-x-2 py-4">
+      <button
+        onClick={handlePreviousPage}
+        disabled={currentPage <= 1}
+        className="px-4 py-2 border text-slate-800 rounded-md disabled:opacity-50 transition-colors hover:bg-gradient-to-r from-blue-500 to-purple-500 hover:text-white shadow-md"
+      >
+        Anterior
+      </button>
+
+      <div className="flex items-center space-x-1">
+        <span className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 shadow-md text-white rounded-md font-bold">{currentPage}</span>
+        <span className="text-gray-500">de</span>
+        <span className="px-4 py-2 border rounded-md font-bold">
+          <span className="bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+            {totalPages}
+          </span>
+        </span>
+      </div>
+
+      <button
+        onClick={handleNextPage}
+        disabled={currentPage >= totalPages}
+        className="px-4 py-2 text-slate-800 border rounded-md disabled:opacity-50 transition-colors hover:bg-gradient-to-r from-blue-500 to-purple-500 hover:text-white shadow-md"
+      >
+        Próximo
+      </button>
+    </div>
+  )
+}
+
+interface StatusProps {
+  matchesList: matchesType[]
+  matchesListfinished: matchesType[]
+  matchesUpcoming: matchesType[]
+  leagueTitle?: string
+  currentPage?: number
+  totalPages?: number
+}
+
 const Status = ({
   matchesList = [],
   matchesListfinished = [],
   matchesUpcoming = [],
   leagueTitle = "",
-}: {
-  matchesList: matchesType[]
-  matchesListfinished: matchesType[]
-  matchesUpcoming: matchesType[]
-  leagueTitle?: string
-}) => {
-  const [filter, setFilter] = useState<FilterOption>("all")
+  currentPage = 1,
+  totalPages = 1,
+}: StatusProps) => {
+  const [filter, setFilter] = useState<FilterOption>("today")
   const [isLoading, setIsLoading] = useState(false)
+  const [leaguesOpen, setLeaguesOpen] = useState(false)
 
   const safeMatchesList = Array.isArray(matchesList) ? matchesList : []
   const safeMatchesListFinished = Array.isArray(matchesListfinished) ? matchesListfinished : []
-  const allMatches = [...safeMatchesList, ...safeMatchesListFinished]
+  const safeMatchesUpcoming = Array.isArray(matchesUpcoming) ? matchesUpcoming : []
+  
+  // Combina todas as listas em uma só e remove as duplicatas
+  const allMatchesCombined = removeDuplicates([
+    ...safeMatchesList, 
+    ...safeMatchesListFinished, 
+    ...safeMatchesUpcoming
+  ]);
 
   useEffect(() => {
     setIsLoading(true)
@@ -103,18 +191,25 @@ const Status = ({
     return () => clearTimeout(timer)
   }, [filter])
 
-const filteredMatches = (() => {
-  switch (filter) {
-    case "finished":
-      return safeMatchesListFinished.filter((match) => match.status === "FINISHED");
-  case "upcoming":
-  return Array.isArray(matchesUpcoming)
-    ? matchesUpcoming.filter((match) => match.status === "SCHEDULED" || match.status === "TIMED")
-    : [];
-    default:
-      return allMatches;
-  }
-})();
+  const filteredMatches = (() => {
+    const today = new Date().toDateString();
+    switch (filter) {
+      case "finished":
+        return safeMatchesListFinished.filter((match) => match.status === "FINISHED");
+      case "upcoming":
+        return safeMatchesUpcoming;
+      case "today":
+        return allMatchesCombined.filter((match) => {
+          if (!match || !match.utcDate) return false;
+          return new Date(match.utcDate).toDateString() === today;
+        });
+      default:
+        return allMatchesCombined.filter((match) => {
+          if (!match || !match.utcDate) return false;
+          return new Date(match.utcDate).toDateString() === today;
+        });
+    }
+  })();
 
   const groupedMatches = groupMatchesByDate(filteredMatches)
 
@@ -130,11 +225,20 @@ const filteredMatches = (() => {
       {/* Botões de filtro */}
       <div className="sticky z-10 bg-slate-50 pt-3 pb-4 px-2 rounded-lg shadow-sm">
         <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
+          {/* Botão de Ligas para Mobile */}
+          <div className="md:hidden">
+            <FilterButton
+              active={leaguesOpen}
+              onClick={() => setLeaguesOpen(!leaguesOpen)}
+              icon={<Trophy className="w-4 h-4" />}
+              label="Ligas"
+            />
+          </div>
           <FilterButton
-            active={filter === "all"}
-            onClick={() => setFilter("all")}
+            active={filter === "today"}
+            onClick={() => setFilter("today")}
             icon={<ListFilter className="w-4 h-4" />}
-            label="Todos"
+            label="Jogos do Dia"
           />
           <FilterButton
             active={filter === "finished"}
@@ -149,6 +253,13 @@ const filteredMatches = (() => {
             label="Próximos"
           />
         </div>
+
+        {/* Dropdown de Ligas */}
+        {leaguesOpen && (
+          <div className="md:hidden mt-4 animate-fade-in-down">
+            <Sidebar />
+          </div>
+        )}
       </div>
 
       {/* Lista de jogos */}
@@ -218,9 +329,15 @@ const filteredMatches = (() => {
           )}
         </motion.div>
       )}
+
+      {/* A paginação agora só é mostrada para a aba "Próximos" */}
+      {filter === "upcoming" && totalPages > 1 && (
+        <div className="flex justify-center mt-6">
+          <Pagination totalPages={totalPages} currentPage={currentPage} />
+        </div>
+      )}
     </div>
   )
 }
 
 export default Status
-

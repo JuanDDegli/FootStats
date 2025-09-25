@@ -15,10 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-[#ffffff] text-textPrimary">
+      <body className="bg-white text-textPrimary">
         <Navbar />
         {children}
-        <footer className="w-full text-center py-4 bg-gray-100 text-gray-600 mt-8">
+        <footer className="w-full text-center py-4 bg-gray-100 text-gray-600 ">
           Design by{" "}
           <span
             className="font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500
