@@ -11,10 +11,10 @@ const GAMES_PER_PAGE = 6
 export default async function ChampionsLeague({
   searchParams,
 }: {
-  searchParams: { page?: string }
+  searchParams?: { page?: string };
 }) {
   try {
-    const currentPage = Number(searchParams.page) || 1
+    const currentPage = Number(searchParams?.page) || 1
     const getDatas = await getMatchesFootball()
     const getDatasFinished = await getMatchesFootballFinished()
     const getUpcoming = await getUpcomingMatchesNext3Days()

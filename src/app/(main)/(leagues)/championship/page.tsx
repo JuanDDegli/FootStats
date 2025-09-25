@@ -10,10 +10,10 @@ const GAMES_PER_PAGE = 6
 const Championship = async ({
   searchParams,
 }: {
-  searchParams: { page?: string }
+  searchParams?: { page?: string };
 }) => {
   try {
-    const currentPage = Number(searchParams.page) || 1
+    const currentPage = Number(searchParams?.page) || 1
     const liveMatches = await getMatchesFootball()
     const finishedMatches = await getMatchesFootballFinished()
     const upcomingMatches = await getUpcomingMatchesNext3Days()

@@ -10,10 +10,10 @@ const GAMES_PER_PAGE = 6
 const English = async ({
   searchParams,
 }: {
-  searchParams: { page?: string }
+  searchParams?: { page?: string };
 }) => {
   try {
-    const currentPage = Number(searchParams.page) || 1
+    const currentPage = Number(searchParams?.page) || 1
     const getDatas = await getMatchesFootball();
     const getDatasFinished = await getMatchesFootballFinished();
     const upcoming = await getUpcomingMatchesNext3Days();
