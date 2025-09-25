@@ -3,7 +3,7 @@ import type { apiOptions, matchesType } from "@/types";
 const options: apiOptions = {
   next: { revalidate: 30 },
   headers: {
-    "X-Auth-Token": process.env.API_KEY ?? "",
+    "X-Auth-Token": process.env.NEXT_PUBLIC_API_KEY ?? "",
     "Content-Type": "application/json",
   },
 };
@@ -84,7 +84,7 @@ export async function getUpcomingMatchesNext3Days(): Promise<{ matches: matchesT
 
 export async function getNewsInfo() {
   const newsData = await fetch(
-    `https://newsapi.org/v2/everything?apiKey=${process.env.NEWS_API_KEY}&q=soccer&pageSize=10`,
+    `https://newsapi.org/v2/everything?apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}&q=soccer&pageSize=10`,
     { next: { revalidate: 20 } }
   );
   return newsData.json();
