@@ -1,19 +1,13 @@
 import {
   getUpcomingMatchesNext3Days,
   getMatchesFootballFinished,
+  getMatchesFootball,
 } from "@/api"
 import Status from "@/components/status"
 
-const GAMES_PER_PAGE = 6
-
-const Bundesliga = async ({
-  searchParams,
-}: {
-  searchParams?: { page?: string };
-}) => {
+const Bundesliga = async () => {
   try {
-    const currentPage = Number(searchParams?.page) || 1
-
+    const liveMatches = await getMatchesFootball()
     const upcoming = await getUpcomingMatchesNext3Days()
     const matchesUpcoming = (upcoming?.matches || []).filter(
       (match) =>
@@ -21,26 +15,22 @@ const Bundesliga = async ({
         match.competition?.name === "Bundesliga"
     )
 
-    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
-    const endIndex = startIndex + GAMES_PER_PAGE
-    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
-
-    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
-
     const getFinished = await getMatchesFootballFinished()
     const matchesListFinished = (getFinished?.matches || []).filter(
+      (match) => match.competition?.name === "Bundesliga"
+    )
+    
+    const matchesList = (liveMatches?.matches || []).filter(
       (match) => match.competition?.name === "Bundesliga"
     )
 
     return (
       <div>
         <Status
-          matchesList={[]}
+          matchesList={matchesList}
           matchesListfinished={matchesListFinished}
-          matchesUpcoming={paginatedMatches}
+          matchesUpcoming={matchesUpcoming}
           leagueTitle="Bundesliga"
-          currentPage={currentPage}
-          totalPages={totalPages}
         />
       </div>
     )

@@ -5,12 +5,14 @@ import type React from "react"
 import type { matchesType } from "@/types"
 import LeagueTable from "./leagueTable"
 import Competition from "./competition"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Loader from "./loader"
 import { motion } from "framer-motion"
-import { ArrowDownRightIcon, CheckCircle, ListFilter, Trophy } from "lucide-react"
+import { ArrowDownRightIcon, CheckCircle, ListFilter, List } from "lucide-react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 import Sidebar from "./sidebar"
+
+const GAMES_PER_PAGE = 10;
 
 // Função para remover duplicatas de um array de partidas
 const removeDuplicates = (matches: matchesType[]) => {
@@ -34,9 +36,7 @@ const groupMatchesByDate = (matches: matchesType[]) => {
     const today = new Date()
     const yesterday = new Date(today)
     yesterday.setDate(today.getDate() - 1)
-    const tomorrow = new Date(today)
-    tomorrow.setDate(today.getDate() + 1)
-
+    
     let dateLabel = date.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })
 
     if (date.toDateString() === today.toDateString()) {
@@ -110,13 +110,13 @@ const Pagination = ({
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      router.push(createPageURL(currentPage + 1))
+      router.push(createPageURL(currentPage + 1), { scroll: false })
     }
   }
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
-      router.push(createPageURL(currentPage - 1))
+      router.push(createPageURL(currentPage - 1), { scroll: false })
     }
   }
 
@@ -156,8 +156,6 @@ interface StatusProps {
   matchesListfinished: matchesType[]
   matchesUpcoming: matchesType[]
   leagueTitle?: string
-  currentPage?: number
-  totalPages?: number
 }
 
 const Status = ({
@@ -165,23 +163,32 @@ const Status = ({
   matchesListfinished = [],
   matchesUpcoming = [],
   leagueTitle = "",
-  currentPage = 1,
-  totalPages = 1,
 }: StatusProps) => {
   const [filter, setFilter] = useState<FilterOption>("today")
   const [isLoading, setIsLoading] = useState(false)
-  const [leaguesOpen, setLeaguesOpen] = useState(false)
+  const [isLeaguesOpen, setIsLeaguesOpen] = useState(false)
+
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
 
   const safeMatchesList = Array.isArray(matchesList) ? matchesList : []
   const safeMatchesListFinished = Array.isArray(matchesListfinished) ? matchesListfinished : []
   const safeMatchesUpcoming = Array.isArray(matchesUpcoming) ? matchesUpcoming : []
   
-  // Combina todas as listas em uma só e remove as duplicatas
-  const allMatchesCombined = removeDuplicates([
+  const allMatchesCombined = useMemo(() => removeDuplicates([
     ...safeMatchesList, 
     ...safeMatchesListFinished, 
     ...safeMatchesUpcoming
-  ]);
+  ]), [safeMatchesList, safeMatchesListFinished, safeMatchesUpcoming]);
+
+  const todayMatches = useMemo(() => {
+    const today = new Date().toDateString();
+    return allMatchesCombined.filter((match) => {
+      if (!match || !match.utcDate) return false;
+      return new Date(match.utcDate).toDateString() === today;
+    });
+  }, [allMatchesCombined]);
+
 
   useEffect(() => {
     setIsLoading(true)
@@ -189,29 +196,33 @@ const Status = ({
       setIsLoading(false)
     }, 800)
     return () => clearTimeout(timer)
-  }, [filter])
+  }, [filter, currentPage])
 
-  const filteredMatches = (() => {
-    const today = new Date().toDateString();
+  const { paginatedMatches, totalPages } = useMemo(() => {
+    let activeList: matchesType[] = [];
+
     switch (filter) {
       case "finished":
-        return safeMatchesListFinished.filter((match) => match.status === "FINISHED");
+        activeList = safeMatchesListFinished;
+        break;
       case "upcoming":
-        return safeMatchesUpcoming;
+        activeList = safeMatchesUpcoming;
+        break;
       case "today":
-        return allMatchesCombined.filter((match) => {
-          if (!match || !match.utcDate) return false;
-          return new Date(match.utcDate).toDateString() === today;
-        });
       default:
-        return allMatchesCombined.filter((match) => {
-          if (!match || !match.utcDate) return false;
-          return new Date(match.utcDate).toDateString() === today;
-        });
+        activeList = todayMatches;
+        break;
     }
-  })();
 
-  const groupedMatches = groupMatchesByDate(filteredMatches)
+    const total = Math.ceil(activeList.length / GAMES_PER_PAGE);
+    const startIndex = (currentPage - 1) * GAMES_PER_PAGE;
+    const endIndex = startIndex + GAMES_PER_PAGE;
+    const paginated = activeList.slice(startIndex, endIndex);
+
+    return { paginatedMatches: paginated, totalPages: total };
+  }, [filter, currentPage, safeMatchesListFinished, safeMatchesUpcoming, todayMatches]);
+
+  const groupedMatches = groupMatchesByDate(paginatedMatches);
 
   return (
     <div className="space-y-6 w-full">
@@ -225,44 +236,41 @@ const Status = ({
       {/* Botões de filtro */}
       <div className="sticky z-10 bg-slate-50 pt-3 pb-4 px-2 rounded-lg shadow-sm">
         <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
-          {/* Botão de Ligas para Mobile */}
           <div className="md:hidden">
             <FilterButton
-              active={leaguesOpen}
-              onClick={() => setLeaguesOpen(!leaguesOpen)}
-              icon={<Trophy className="w-4 h-4" />}
+              active={isLeaguesOpen}
+              onClick={() => setIsLeaguesOpen(!isLeaguesOpen)}
+              icon={<List className="w-4 h-4" />}
               label="Ligas"
             />
           </div>
           <FilterButton
             active={filter === "today"}
-            onClick={() => setFilter("today")}
+            onClick={() => { setFilter("today"); setIsLeaguesOpen(false); }}
             icon={<ListFilter className="w-4 h-4" />}
             label="Jogos do Dia"
           />
           <FilterButton
             active={filter === "finished"}
-            onClick={() => setFilter("finished")}
+            onClick={() => { setFilter("finished"); setIsLeaguesOpen(false); }}
             icon={<CheckCircle className="w-4 h-4" />}
             label="Finalizados"
           />
           <FilterButton
             active={filter === "upcoming"}
-            onClick={() => setFilter("upcoming")}
+            onClick={() => { setFilter("upcoming"); setIsLeaguesOpen(false); }}
             icon={<ArrowDownRightIcon className="w-4 h-4" />}
             label="Próximos"
           />
         </div>
-
-        {/* Dropdown de Ligas */}
-        {leaguesOpen && (
-          <div className="md:hidden mt-4 animate-fade-in-down">
-            <Sidebar />
-          </div>
-        )}
       </div>
 
-      {/* Lista de jogos */}
+      {isLeaguesOpen && (
+        <div className="md:hidden mt-4">
+          <Sidebar />
+        </div>
+      )}
+
       {isLoading ? (
         <Loader />
       ) : (
@@ -272,7 +280,7 @@ const Status = ({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
-          {!filteredMatches.length ? (
+          {!paginatedMatches.length ? (
             <div className="text-center text-gray-600 mt-6">
               <p className="text-lg font-semibold">Nenhum jogo disponível no momento.</p>
               <p className="text-sm">Volte mais tarde para conferir novas partidas.</p>
@@ -280,21 +288,11 @@ const Status = ({
           ) : Object.entries(groupedMatches).length > 0 ? (
             Object.entries(groupedMatches)
               .sort(([dateA], [dateB]) => {
-                const parsedDateA = new Date(
-                  dateA === "Hoje"
-                    ? new Date()
-                    : dateA === "Ontem"
-                      ? new Date(new Date().setDate(new Date().getDate() - 1))
-                      : new Date(dateA),
-                )
-                const parsedDateB = new Date(
-                  dateB === "Hoje"
-                    ? new Date()
-                    : dateB === "Ontem"
-                      ? new Date(new Date().setDate(new Date().getDate() - 1))
-                      : new Date(dateB),
-                )
-                return parsedDateB.getTime() - parsedDateA.getTime()
+                 if (dateA === "Hoje") return -1;
+                 if (dateB === "Hoje") return 1;
+                 if (dateA === "Ontem") return 1;
+                 if (dateB === "Ontem") return -1;
+                 return new Date(dateB).getTime() - new Date(dateA).getTime();
               })
               .map(([date, matches]) => (
                 <motion.div
@@ -330,8 +328,7 @@ const Status = ({
         </motion.div>
       )}
 
-      {/* A paginação agora só é mostrada para a aba "Próximos" */}
-      {filter === "upcoming" && totalPages > 1 && (
+      {totalPages > 1 && (
         <div className="flex justify-center mt-6">
           <Pagination totalPages={totalPages} currentPage={currentPage} />
         </div>

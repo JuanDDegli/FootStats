@@ -6,15 +6,8 @@ import {
 import Status from "@/components/status"
 import type { matchesType } from "@/types"
 
-const GAMES_PER_PAGE = 6
-
-export default async function ChampionsLeague({
-  searchParams,
-}: {
-  searchParams?: { page?: string };
-}) {
+export default async function ChampionsLeague() {
   try {
-    const currentPage = Number(searchParams?.page) || 1
     const getDatas = await getMatchesFootball()
     const getDatasFinished = await getMatchesFootballFinished()
     const getUpcoming = await getUpcomingMatchesNext3Days()
@@ -29,21 +22,13 @@ export default async function ChampionsLeague({
       (match: matchesType) => (match.status === "SCHEDULED" || match.status === "TIMED") && (match?.competition?.name === "UEFA Champions League" || match?.competition?.code === "CL"),
     )
 
-    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
-    const endIndex = startIndex + GAMES_PER_PAGE
-    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
-
-    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
-
     return (
       <section>
         <Status
           matchesList={matchesDatas}
           matchesListfinished={matchesDatasFinished}
-          matchesUpcoming={paginatedMatches}
+          matchesUpcoming={matchesUpcoming}
           leagueTitle="UEFA Champions League"
-          currentPage={currentPage}
-          totalPages={totalPages}
         />
       </section>
     )

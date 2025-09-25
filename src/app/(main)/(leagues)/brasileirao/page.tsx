@@ -5,15 +5,8 @@ import {
 } from "@/api"
 import Status from "@/components/status"
 
-const GAMES_PER_PAGE = 6
-
-const Brasileirao = async ({
-  searchParams,
-}: {
-  searchParams?: { page?: string };
-}) => {
+const Brasileirao = async () => {
   try {
-    const currentPage = Number(searchParams?.page) || 1
     const liveMatches = await getMatchesFootball()
     const finishedMatches = await getMatchesFootballFinished()
     const upcomingMatches = await getUpcomingMatchesNext3Days()
@@ -30,21 +23,13 @@ const Brasileirao = async ({
         match.competition?.name === "Campeonato Brasileiro Série A"
     )
 
-    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
-    const endIndex = startIndex + GAMES_PER_PAGE
-    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
-
-    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
-
     return (
       <div>
         <Status
           matchesList={matchesList}
           matchesListfinished={matchesListfinished}
-          matchesUpcoming={paginatedMatches}
+          matchesUpcoming={matchesUpcoming}
           leagueTitle="Brasileirão"
-          currentPage={currentPage}
-          totalPages={totalPages}
         />
       </div>
     )

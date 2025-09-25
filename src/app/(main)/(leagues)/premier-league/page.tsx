@@ -5,15 +5,8 @@ import {
 } from "@/api";
 import Status from "@/components/status";
 
-const GAMES_PER_PAGE = 6
-
-const English = async ({
-  searchParams,
-}: {
-  searchParams?: { page?: string };
-}) => {
+const English = async () => {
   try {
-    const currentPage = Number(searchParams?.page) || 1
     const getDatas = await getMatchesFootball();
     const getDatasFinished = await getMatchesFootballFinished();
     const upcoming = await getUpcomingMatchesNext3Days();
@@ -30,21 +23,13 @@ const English = async ({
         match.competition?.name === "Premier League"
     );
 
-    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
-    const endIndex = startIndex + GAMES_PER_PAGE
-    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
-
-    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
-
     return (
       <div>
         <Status
           matchesList={matchesDatas}
           matchesListfinished={matchesDatasFinished}
-          matchesUpcoming={paginatedMatches}
+          matchesUpcoming={matchesUpcoming}
           leagueTitle="Premier League"
-          currentPage={currentPage}
-          totalPages={totalPages}
         />
       </div>
     );

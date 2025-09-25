@@ -5,15 +5,8 @@ import {
 } from "@/api"
 import Status from "@/components/status"
 
-const GAMES_PER_PAGE = 6
-
-const CopaLibertadores = async ({
-  searchParams,
-}: {
-  searchParams?: { page?: string };
-}) => {
+const CopaLibertadores = async () => {
   try {
-    const currentPage = Number(searchParams?.page) || 1
     const liveMatches = await getMatchesFootball()
     const finishedMatches = await getMatchesFootballFinished()
     const upcomingMatches = await getUpcomingMatchesNext3Days()
@@ -30,21 +23,13 @@ const CopaLibertadores = async ({
         match.competition?.name === "Copa Libertadores"
     )
 
-    const startIndex = (currentPage - 1) * GAMES_PER_PAGE
-    const endIndex = startIndex + GAMES_PER_PAGE
-    const paginatedMatches = matchesUpcoming.slice(startIndex, endIndex)
-
-    const totalPages = Math.ceil(matchesUpcoming.length / GAMES_PER_PAGE)
-
     return (
       <div>
         <Status
           matchesList={matchesList}
           matchesListfinished={matchesListfinished}
-          matchesUpcoming={paginatedMatches}
+          matchesUpcoming={matchesUpcoming}
           leagueTitle="Copa Libertadores"
-          currentPage={currentPage}
-          totalPages={totalPages}
         />
       </div>
     )
