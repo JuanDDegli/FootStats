@@ -1,27 +1,26 @@
 import {
-  getUpcomingMatchesNext3Days,
-  getMatchesFootballFinished,
   getMatchesFootball,
+  getMatchesFootballFinished,
+  getUpcomingMatchesNext3Days,
 } from "@/api"
 import Status from "@/components/status"
 
 const Bundesliga = async () => {
   try {
     const liveMatches = await getMatchesFootball()
-    const upcoming = await getUpcomingMatchesNext3Days()
-    const matchesUpcoming = (upcoming?.matches || []).filter(
+    const finishedMatches = await getMatchesFootballFinished()
+    const upcomingMatchesData = await getUpcomingMatchesNext3Days()
+
+    const matchesList = (liveMatches?.matches || []).filter(
+      (match) => match.competition?.name === "Bundesliga"
+    )
+    const matchesListFinished = (finishedMatches?.matches || []).filter(
+      (match) => match.competition?.name === "Bundesliga"
+    )
+    const matchesUpcoming = (upcomingMatchesData?.matches || []).filter(
       (match) =>
         (match.status === "SCHEDULED" || match.status === "TIMED") &&
         match.competition?.name === "Bundesliga"
-    )
-
-    const getFinished = await getMatchesFootballFinished()
-    const matchesListFinished = (getFinished?.matches || []).filter(
-      (match) => match.competition?.name === "Bundesliga"
-    )
-    
-    const matchesList = (liveMatches?.matches || []).filter(
-      (match) => match.competition?.name === "Bundesliga"
     )
 
     return (
