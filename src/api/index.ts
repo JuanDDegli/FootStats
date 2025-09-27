@@ -1,4 +1,4 @@
-import type { apiOptions, matchesType, ScorersResponse, StandingsResponse } from "@/types";
+import type { newsResponse, apiOptions, matchesType, ScorersResponse, StandingsResponse } from "@/types";
 
 const options: apiOptions = {
   next: { revalidate: 30 },
@@ -61,6 +61,15 @@ export async function getTopScorers(leagueCode: string): Promise<ScorersResponse
     console.error(`Failed to fetch scorers for ${leagueCode}:`, error);
     return null;
   }
+}
+
+export async function getNewsInfo(): Promise<newsResponse> {
+
+ const response = await fetch(`https://newsapi.org/v2/everything?q=soccer&language=pt&pageSize=20&apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch news');
+  }
+  return response.json();
 }
 
 export async function filterLeague(filterData: string): Promise<matchesType[]> {

@@ -2,12 +2,8 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'crests.football-data.org',
-        port: '',
-        pathname: '/**',
-      },
+      // Domínio para os escudos dos times. Este é o único que precisamos agora.
+      { hostname: 'crests.football-data.org' },
     ],
   },
 };

@@ -8,11 +8,11 @@ import Competition from "./competition"
 import { useState, useEffect, useMemo } from "react"
 import Loader from "./loader"
 import { motion } from "framer-motion"
-import { ArrowDownRightIcon, CheckCircle, ListFilter, List } from "lucide-react"
+// Ícone de 'List' removido pois o botão de Ligas foi retirado
+import { ArrowDownRightIcon, CheckCircle, ListFilter } from "lucide-react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
-import Sidebar from "./sidebar"
 
-const GAMES_PER_PAGE = 10;
+const GAMES_PER_PAGE = 6;
 
 // Função para remover duplicatas de um array de partidas
 const removeDuplicates = (matches: matchesType[]) => {
@@ -166,7 +166,7 @@ const Status = ({
 }: StatusProps) => {
   const [filter, setFilter] = useState<FilterOption>("today")
   const [isLoading, setIsLoading] = useState(false)
-  const [isLeaguesOpen, setIsLeaguesOpen] = useState(false)
+  // Estado 'isLeaguesOpen' foi removido
 
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
@@ -234,42 +234,31 @@ const Status = ({
       )}
 
       {/* Botões de filtro */}
-      <div className="sticky z-10 bg-slate-50 pt-3 pb-4 px-2 rounded-lg shadow-sm">
+      <div className="sticky top-0 z-10 bg-slate-200/80 backdrop-blur-md pt-3 pb-4 -mx-6 px-6">
         <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
-          <div className="md:hidden">
-            <FilterButton
-              active={isLeaguesOpen}
-              onClick={() => setIsLeaguesOpen(!isLeaguesOpen)}
-              icon={<List className="w-4 h-4" />}
-              label="Ligas"
-            />
-          </div>
+          {/* O botão 'Ligas' foi removido para a versão mobile */}
           <FilterButton
             active={filter === "today"}
-            onClick={() => { setFilter("today"); setIsLeaguesOpen(false); }}
+            onClick={() => setFilter("today")}
             icon={<ListFilter className="w-4 h-4" />}
             label="Jogos do Dia"
           />
           <FilterButton
             active={filter === "finished"}
-            onClick={() => { setFilter("finished"); setIsLeaguesOpen(false); }}
+            onClick={() => setFilter("finished")}
             icon={<CheckCircle className="w-4 h-4" />}
             label="Finalizados"
           />
           <FilterButton
             active={filter === "upcoming"}
-            onClick={() => { setFilter("upcoming"); setIsLeaguesOpen(false); }}
+            onClick={() => setFilter("upcoming")}
             icon={<ArrowDownRightIcon className="w-4 h-4" />}
             label="Próximos"
           />
         </div>
       </div>
 
-      {isLeaguesOpen && (
-        <div className="md:hidden mt-4">
-          <Sidebar />
-        </div>
-      )}
+      {/* A renderização da Sidebar móvel foi removida */}
 
       {isLoading ? (
         <Loader />
@@ -306,7 +295,7 @@ const Status = ({
                     {matches.map((match) => (
                       <motion.div
                         key={match.id}
-                        className="border bg-white rounded-lg shadow-md overflow-hidden" 
+                        className="border bg-white rounded-lg shadow-md overflow-hidden"
                         initial={{ scale: 0.98, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.2 }}

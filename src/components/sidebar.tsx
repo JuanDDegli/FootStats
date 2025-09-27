@@ -4,7 +4,9 @@ import { leagues } from "@/utils/leagues";
 
 const Sidebar: FC = () => {
     return (
-        <section className="px-2 w-full md:w-72 py-2 bg-white border-2 rounded-md md:h-screen">
+        // CORREÇÃO: Adicionada a classe 'h-full'.
+        // 'h-full' funciona para o telemóvel, e 'md:h-screen' continua a funcionar para o desktop.
+        <section className="px-2 w-full md:w-72 py-2 bg-white border-2 rounded-md md:h-screen h-full">
             <div className="mb-4">
                 <h1 className="font-bold text-xl mb-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-move">
                     Leagues

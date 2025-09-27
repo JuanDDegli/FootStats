@@ -26,20 +26,18 @@ export default async function Home() {
     (match) => match.status === "SCHEDULED" || match.status === "TIMED"
   );
 
-  return (
-    // CORREÇÃO: trocado 'md:flex-row' por 'lg:flex-row'
+   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      <div className="flex-1 bg-slate-200 p-6 rounded-lg shadow-sm">
+      <div className="flex-1 bg-slate-200 p-6 rounded-lg shadow-sm -mx-2 md:mx-0">
         <Status
           matchesList={matchesDatas}
           matchesListfinished={matchesDatasFinished}
           matchesUpcoming={matchesUpcoming}
         />
       </div>
-      {/* CORREÇÃO: trocado 'md:w-[300px]' por 'lg:w-[300px]' */}
-      <div className="w-full lg:w-[300px]">
+      <div className="hidden lg:block w-full lg:w-[300px]">
         <StandingsWidget initialStandings={validStandings} />
       </div>
     </div>
   );
-} 
+}

@@ -8,30 +8,18 @@ export const metadata: Metadata = {
   description: "Get the latest football match information across different leagues",
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      {/* CORREÇÃO: 
-        1. Adicionamos 'flex flex-col min-h-screen' ao <body>.
-           - 'flex flex-col': Organiza os filhos (conteúdo e rodapé) em uma coluna.
-           - 'min-h-screen': Garante que o body ocupe pelo menos 100% da altura da tela.
-      */}
       <body className="flex flex-col min-h-screen bg-white text-textPrimary">
-        {/*
-          2. Criamos uma div que envolve o conteúdo principal.
-             - 'flex-1' (ou flex-grow): Faz esta div "crescer" e ocupar todo o espaço 
-               disponível, empurrando o rodapé para baixo.
+        {/* CORREÇÃO: Adicionadas as classes 'flex flex-col' aqui.
+            Isto garante que a Navbar e o {children} se organizem
+            corretamente numa coluna vertical que preenche o ecrã.
         */}
-        <div className="flex-1">
+        <div className="flex flex-col flex-1">
           <Navbar />
           {children}
         </div>
-
-        {/* 3. O rodapé permanece no final, dentro do body. */}
         <footer className="w-full text-center py-4 bg-gray-100 text-gray-600">
           Design by{" "}
           <span
