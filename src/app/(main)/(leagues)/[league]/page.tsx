@@ -11,18 +11,19 @@ import ScorersTable from "@/components/scorersTable"
 import { leagues } from "@/utils/leagues"
 import type { matchesType, Standing } from "@/types"
 
-interface LeaguePageProps {
+// A interface 'LeaguePageProps' foi removida.
+// O tipo agora é definido diretamente na assinatura da função abaixo.
+type Props = {
   params: {
-    league: string
-  }
-}
+    league: string;
+  };
+};
 
-const LeaguePage = async ({ params }: LeaguePageProps) => {
+// CORREÇÃO: A tipagem dos props foi alterada aqui.
+const LeaguePage = async ({ params }: Props) => {
   const leagueSlug = params.league;
   const leagueInfo = leagues.find((l) => l.href === leagueSlug);
 
-  // Esta verificação é crucial. Como ela retorna algo,
-  // o TypeScript entende que o código abaixo só será executado se 'leagueInfo' existir.
   if (!leagueInfo) {
     return (
       <section className="p-4">
@@ -35,7 +36,6 @@ const LeaguePage = async ({ params }: LeaguePageProps) => {
   }
 
   try {
-    // A partir daqui, TypeScript sabe que 'leagueInfo' não é 'undefined'.
     const [
       liveMatches,
       finishedMatches,
@@ -64,7 +64,6 @@ const LeaguePage = async ({ params }: LeaguePageProps) => {
 
     return (
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Coluna da Esquerda: Jogos */}
         <div className="flex-1 bg-slate-200 p-6 rounded-lg shadow-sm">
           <Status
             matchesList={matchesList}
@@ -74,7 +73,6 @@ const LeaguePage = async ({ params }: LeaguePageProps) => {
           />
         </div>
 
-        {/* Coluna da Direita: Tabela e Artilheiros */}
         <div className="w-full lg:w-[300px] space-y-6">
           {mainStanding && mainStanding.table ? (
             <div className="bg-white p-4 rounded-lg shadow-sm border-2">
