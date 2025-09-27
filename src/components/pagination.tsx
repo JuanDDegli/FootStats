@@ -1,5 +1,4 @@
-// components/Pagination.tsx
-"use client" // É um componente cliente porque precisa de interatividade
+"use client"
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 

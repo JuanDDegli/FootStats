@@ -11,15 +11,13 @@ import ScorersTable from "@/components/scorersTable"
 import { leagues } from "@/utils/leagues"
 import type { matchesType, Standing } from "@/types"
 
-// A interface 'LeaguePageProps' foi removida.
-// O tipo agora é definido diretamente na assinatura da função abaixo.
 type Props = {
   params: {
     league: string;
   };
 };
 
-// CORREÇÃO: A tipagem dos props foi alterada aqui.
+
 const LeaguePage = async ({ params }: Props) => {
   const leagueSlug = params.league;
   const leagueInfo = leagues.find((l) => l.href === leagueSlug);

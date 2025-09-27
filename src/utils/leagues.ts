@@ -1,7 +1,4 @@
-import type { LeagueInfo } from "@/types"; // Importe a nova interface
-
-// Mapeia nossas rotas (href) para os nomes e códigos da API
-// Aplique o tipo aqui para garantir que todos os objetos sigam a mesma estrutura
+import type { LeagueInfo } from "@/types"
 export const leagues: LeagueInfo[] = [
     { id: 2021, name: "Premier League", href: "premier-league", logo: "/logos/premier_league.webp", code: "PL", apiName: "Premier League" },
     { id: 2014, name: "La Liga", href: "la-liga", logo: "/logos/laliga.png", code: "PD", apiName: "Primera Division" },

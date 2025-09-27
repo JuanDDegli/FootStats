@@ -6,7 +6,7 @@ interface ScorersTableProps {
 }
 
 const ScorersTable = ({ scorers }: ScorersTableProps) => {
-  const topScorers = scorers.slice(0, 10) // Mostra os 10 primeiros
+  const topScorers = scorers.slice(0, 5) 
 
   return (
     <div className="overflow-x-auto">

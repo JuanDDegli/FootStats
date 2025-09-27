@@ -9,7 +9,6 @@ export default function AboutPage() {
   const [activeTab, setActiveTab] = useState("features")
   const [showScrollTop, setShowScrollTop] = useState(false)
 
-  // Handle scroll to show/hide the scroll-to-top button
   React.useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300)

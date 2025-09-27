@@ -9,11 +9,9 @@ const Matches = ({ data }: { data: matchesType }) => {
   });
 
   return (
-    // CORREÇÃO: Aumentamos o padding lateral (px-4) e o gap entre os elementos.
     <div className="flex items-center justify-between gap-x-3 px-4 min-h-[96px]">
       
       {/* Time da casa */}
-      {/* CORREÇÃO: Removido w-2/5. Adicionado flex-1 e min-w-0 para um layout flexível que não quebra. */}
       <div className="flex flex-1 items-center gap-x-2 justify-end min-w-0">
         <p className="text-xs md:text-sm font-bold text-slate-700 text-right truncate" title={data?.homeTeam?.name}>
           {data?.homeTeam?.name}
@@ -48,7 +46,6 @@ const Matches = ({ data }: { data: matchesType }) => {
       </div>
 
       {/* Time visitante */}
-      {/* CORREÇÃO: Removido w-2/5. Adicionado flex-1 e min-w-0 para um layout flexível que não quebra. */}
       <div className="flex flex-1 items-center gap-x-2 justify-start min-w-0">
         <div className="w-[30px] h-[30px] md:w-[40px] md:h-[40px] flex-shrink-0 relative">
           <Image

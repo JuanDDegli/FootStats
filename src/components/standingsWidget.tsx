@@ -1,18 +1,16 @@
-// src/components/StandingsWidget.tsx
 "use client"
 
 import { useState } from "react"
 import type { Standing } from "@/types"
 import StandingsTable from "./standingsTable"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { mainLeagues } from "@/utils/leagues" // Importar para pegar os nomes
+import { mainLeagues } from "@/utils/leagues"
 
 interface StandingsWidgetProps {
-  initialStandings: Standing[]; // Recebe os dados como prop
+  initialStandings: Standing[]; 
 }
 
 const StandingsWidget = ({ initialStandings }: StandingsWidgetProps) => {
-  // Não busca mais dados, usa o que recebeu via props
   const [standings] = useState<Standing[]>(initialStandings);
   const [currentLeagueIndex, setCurrentLeagueIndex] = useState(0);
 

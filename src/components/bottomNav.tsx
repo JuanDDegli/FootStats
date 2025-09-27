@@ -2,20 +2,17 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-// 1. Importe o novo ícone 'Newspaper'
 import { Home, Shield, Newspaper } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Jogos", icon: Home },
   { href: "/leagues", label: "Ligas", icon: Shield },
-  // 2. Substitua o item "Tabelas" por "Notícias"
   { href: "/news", label: "Notícias", icon: Newspaper },
 ]
 
 const BottomNav = () => {
   const pathname = usePathname()
 
-  // Não mostrar em páginas que não são de futebol (ex: about, contact)
   if (pathname.startsWith('/about') || pathname.startsWith('/contact')) {
     return null;
   }

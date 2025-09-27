@@ -1,5 +1,4 @@
-"use client" // Precisamos que este seja um componente de cliente para detetar o ecrã e redirecionar
-
+"use client"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/sidebar";
@@ -10,14 +9,12 @@ const LeaguesPage = () => {
   const { width } = useWindowSize();
 
   useEffect(() => {
-    // O breakpoint 'md' do Tailwind CSS é 768px.
-    // Se a largura da janela for maior ou igual, redireciona para a home.
+
     if (width >= 768) {
       router.replace('/'); 
     }
   }, [width, router]);
 
-  // Se a largura for menor que 768px, mostra o conteúdo para telemóvel
   if (width < 768) {
     return (
       <div className="p-4 h-full">
@@ -27,9 +24,6 @@ const LeaguesPage = () => {
       </div>
     );
   }
-
-  // Enquanto a verificação da largura acontece (ou em ecrãs de desktop antes do redirecionamento),
-  // não mostra nada para evitar um "flash" de conteúdo.
   return null;
 };
 

@@ -20,7 +20,7 @@ export default function useWindowSize() {
     }
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Executa na montagem inicial para obter o tamanho correto
+    handleResize();
     
     return () => window.removeEventListener("resize", handleResize);
   }, []);

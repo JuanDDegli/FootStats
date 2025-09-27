@@ -1,14 +1,12 @@
-// src/components/StandingsTable.tsx
 import type { TableEntry } from "@/types";
 import Image from "next/image";
 
 interface StandingsTableProps {
   table: TableEntry[];
-  showAll?: boolean; // Nova prop
+  showAll?: boolean;
 }
 
 const StandingsTable = ({ table, showAll = false }: StandingsTableProps) => {
-  // Mostra a tabela completa ou apenas os 5 primeiros
   const teamsToShow = showAll ? table : table.slice(0, 20);
 
   return (

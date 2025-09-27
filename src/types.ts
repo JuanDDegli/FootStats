@@ -82,8 +82,6 @@ export type matchesArea = {
         emblem: string
       }
     }
-  // ... (mantenha todos os outros tipos no ficheiro)
-
 export interface Team {
   id: number;
   name: string;
@@ -148,21 +146,19 @@ export interface LeagueInfo {
 }
 
 export type newsType = {
-  source: {
-    id: string | null;
-    name: string;
-  };
-  author: string;
   title: string;
   description: string;
-  url: string;
-  urlToImage: string;
-  publishedAt: string;
   content: string;
+  url: string;
+  image: string;
+  publishedAt: string;
+  source: {
+    name: string;
+    url: string;
+  };
 };
 
 export type newsResponse = {
-  status: string;
-  totalResults: number;
+  totalArticles: number;
   articles: newsType[];
 };

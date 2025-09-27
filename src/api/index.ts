@@ -13,7 +13,6 @@ export async function getMatchesFootball(): Promise<{ matches: matchesType[] }> 
   return response.json();
 }
 
-// Função para buscar jogos finalizados de até 3 dias atrás
 export async function getMatchesFootballFinished(): Promise<{ matches: matchesType[] }> {
   const now = new Date();
   const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
@@ -64,10 +63,15 @@ export async function getTopScorers(leagueCode: string): Promise<ScorersResponse
 }
 
 export async function getNewsInfo(): Promise<newsResponse> {
-
- const response = await fetch(`https://newsapi.org/v2/everything?q=soccer&language=pt&pageSize=20&apiKey=${process.env.NEXT_PUBLIC_NEWS_API_KEY}`);
+   const query = encodeURIComponent('("Brasileirão" OR "Futebol Brasileiro" OR "Brazilian League") NOT "futebol americano"');
+  
+  
+  const response = await fetch(`https://gnews.io/api/v4/search?q=${query}&max=10&token=${process.env.NEXT_PUBLIC_GNEWS_API_KEY}`, {
+    next: { revalidate: 3600 }
+  });
+  
   if (!response.ok) {
-    throw new Error('Failed to fetch news');
+    throw new Error('Failed to fetch news from GNews');
   }
   return response.json();
 }

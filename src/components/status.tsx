@@ -1,4 +1,3 @@
-// components/status.tsx
 "use client"
 
 import type React from "react"
@@ -8,13 +7,10 @@ import Competition from "./competition"
 import { useState, useEffect, useMemo } from "react"
 import Loader from "./loader"
 import { motion } from "framer-motion"
-// Ícone de 'List' removido pois o botão de Ligas foi retirado
 import { ArrowDownRightIcon, CheckCircle, ListFilter } from "lucide-react"
 import { useRouter, usePathname, useSearchParams } from "next/navigation"
 
 const GAMES_PER_PAGE = 6;
-
-// Função para remover duplicatas de um array de partidas
 const removeDuplicates = (matches: matchesType[]) => {
   const map = new Map();
   for (const match of matches) {
@@ -166,7 +162,6 @@ const Status = ({
 }: StatusProps) => {
   const [filter, setFilter] = useState<FilterOption>("today")
   const [isLoading, setIsLoading] = useState(false)
-  // Estado 'isLeaguesOpen' foi removido
 
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
