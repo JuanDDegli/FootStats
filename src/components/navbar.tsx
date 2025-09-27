@@ -35,6 +35,12 @@ const Navbar: React.FC = () => {
               Home
             </Link>
           </li>
+          {/* CORREÇÃO: Adicionado o novo link para Notícias */}
+          <li>
+            <Link href="/news" className="text-[#6A5ACD] font-semibold hover:text-gray-300 transition duration-300">
+              Notícias
+            </Link>
+          </li>
           <li>
             <Link href="/about" className="text-[#6A5ACD] font-semibold hover:text-gray-300 transition duration-300">
               About
@@ -64,6 +70,16 @@ const Navbar: React.FC = () => {
                 onClick={toggleMenu}
               >
                 Home
+              </Link>
+            </li>
+            {/* CORREÇÃO: Adicionado o novo link para Notícias no menu mobile também */}
+            <li>
+              <Link
+                href="/news"
+                className="text-[#6A5ACD] hover:text-gray-400 transition duration-300 block"
+                onClick={toggleMenu}
+              >
+                Notícias
               </Link>
             </li>
             <li>
