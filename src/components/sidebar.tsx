@@ -1,18 +1,6 @@
 import { FC } from "react";
 import LinkSide from "./linkSide";
-
-const leagues = [
-    { id: 1, name: "Premier League", href: "premier-league", logo: "/logos/premier_league.webp", code: "PL" },
-    { id: 2, name: "La Liga", href: "la-liga", logo: "/logos/laliga.png", code: "PD" },
-    { id: 3, name: "Bundesliga", href: "bundesliga", logo: "/logos/bundesliga.webp", code: "BL1" },
-    { id: 4, name: "Serie A", href: "serie-a", logo: "/logos/serie_a.webp", code: "SA" },
-    { id: 5, name: "Ligue 1", href: "ligue-1", logo: "/logos/ligue_1.webp", code: "FL1" },
-    { id: 6, name: "Primeira Liga", href: "primeira-liga", logo: "/logos/liga_portugal.webp", code: "PPL" },
-    { id: 7, name: "Championship", href: "championship", logo: "/logos/championship.webp", code: "ELC" },
-    { id: 8, name: "Brasileirão", href: "brasileirao", logo: "/logos/brazilian_serie_a.webp", code: "BSA" },
-    { id: 9, name: "Champions League", href: "champions-league", logo: "/logos/champions-league.png", code: "CL" },
-    { id: 10, name: "Libertadores", href: "copa-libertadores", logo: "/logos/copa_libertadores.webp", code: "CLI" },
-];
+import { leagues } from "@/utils/leagues";  
 
 const Sidebar: FC = () => {
     return (
@@ -27,7 +15,7 @@ const Sidebar: FC = () => {
                             key={league.id}
                             className="flex text-slate-700 items-center cursor-pointer font-bold rounded-md transition duration-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-500 hover:text-white hover:scale-105"
                         >
-                            <LinkSide href={league.href} name={league?.name} src={league?.logo} />
+                            <LinkSide href={`/${league.href}`} name={league?.name} src={league?.logo} />
                         </div>
                     ))}
                 </ul>

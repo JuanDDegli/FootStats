@@ -114,4 +114,35 @@ export interface StandingsResponse {
   standings: Standing[];
 }
 
-  
+export interface Scorer {
+  player: {
+    id: number;
+    name: string;
+    firstName: string;
+    lastName: string | null;
+    dateOfBirth: string;
+    nationality: string;
+    position: string;
+  };
+  team: {
+    id: number;
+    name: string;
+    crest: string;
+  };
+  goals: number;
+  assists: number | null;
+  penalties: number | null;
+}
+
+export interface ScorersResponse {
+  scorers: Scorer[];
+}
+
+export interface LeagueInfo {
+  id: number;
+  name: string;
+  href: string;
+  logo: string;
+  code: string;
+  apiName: string;
+}

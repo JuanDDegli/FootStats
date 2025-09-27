@@ -1,46 +1,60 @@
 // src/components/StandingsWidget.tsx
-import { getStandings } from "@/api";
-import StandingsTable from "./standingsTable";
+"use client"
 
-// Definimos as principais ligas que queremos mostrar
-const mainLeagues = [
-  { name: "Premier League", code: "PL" },
-  { name: "La Liga", code: "PD" },
-  { name: "Brasileirão", code: "BSA" },
-  { name: "Bundesliga", code: "BL1" },
-  { name: "Serie A", code: "SA" },
-];
+import { useState } from "react"
+import type { Standing } from "@/types"
+import StandingsTable from "./standingsTable"
+import { ChevronLeft, ChevronRight } from "lucide-react"
+import { mainLeagues } from "@/utils/leagues" // Importar para pegar os nomes
 
-const StandingsWidget = async () => {
-  // Buscamos os dados de todas as ligas em paralelo
-  const standingsPromises = mainLeagues.map(league => getStandings(league.code));
-  const standingsResults = await Promise.all(standingsPromises);
+interface StandingsWidgetProps {
+  initialStandings: Standing[]; // Recebe os dados como prop
+}
+
+const StandingsWidget = ({ initialStandings }: StandingsWidgetProps) => {
+  // Não busca mais dados, usa o que recebeu via props
+  const [standings] = useState<Standing[]>(initialStandings);
+  const [currentLeagueIndex, setCurrentLeagueIndex] = useState(0);
+
+  const nextLeague = () => {
+    setCurrentLeagueIndex((prevIndex) => (prevIndex + 1) % mainLeagues.length);
+  };
+
+  const prevLeague = () => {
+    setCurrentLeagueIndex((prevIndex) => (prevIndex - 1 + mainLeagues.length) % mainLeagues.length);
+  };
+
+  const currentStanding = standings[currentLeagueIndex];
+  const currentLeague = mainLeagues[currentLeagueIndex];
 
   return (
-    <div className='w-full md:w-[300px] border-2 bg-white rounded-md px-4 py-4 flex flex-col gap-6'>
-      <h1 className='text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-move font-bold'>
-        Classificações
-      </h1>
-      {standingsResults.map((result, index) => {
-        // A API pode retornar múltiplas tabelas (ex: fases de grupos), pegamos a primeira e a principal.
-        const mainStanding = result?.standings?.find(s => s.type === 'TOTAL');
-
-        if (!mainStanding || !mainStanding.table) {
-          return (
-            <div key={mainLeagues[index].code}>
-              <h2 className="font-bold text-md text-slate-800 mb-2">{mainLeagues[index].name}</h2>
-              <p className="text-sm text-gray-500">Não foi possível carregar a tabela.</p>
-            </div>
-          );
-        }
-
-        return (
-          <div key={mainLeagues[index].code}>
-            <h2 className="font-bold text-md text-slate-800 mb-2">{mainLeagues[index].name}</h2>
-            <StandingsTable table={mainStanding.table} />
-          </div>
-        );
-      })}
+    <div className="w-full md:w-[300px] border-2 bg-white rounded-md px-4 py-4 flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient-move font-bold">
+          Classificações
+        </h1>
+        <div className="flex items-center gap-2">
+          <button onClick={prevLeague} className="p-1 rounded-full hover:bg-gray-200 transition-colors">
+            <ChevronLeft size={20} />
+          </button>
+          <button onClick={nextLeague} className="p-1 rounded-full hover:bg-gray-200 transition-colors">
+            <ChevronRight size={20} />
+          </button>
+        </div>
+      </div>
+      
+      {/* Lógica de exibição simplificada */}
+      {currentStanding && currentStanding.table ? (
+        <div>
+          <h2 className="font-bold text-md text-slate-800 mb-2">{currentLeague.name}</h2>
+          <StandingsTable table={currentStanding.table} />
+        </div>
+      ) : (
+        <div>
+          <h2 className="font-bold text-md text-slate-800 mb-2">{currentLeague.name}</h2>
+          <p className="text-sm text-gray-500">Não foi possível carregar a tabela.</p>
+        </div>
+      )}
     </div>
   );
 };

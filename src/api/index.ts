@@ -1,4 +1,4 @@
-import type { apiOptions, matchesType, StandingsResponse } from "@/types";
+import type { apiOptions, matchesType, ScorersResponse, StandingsResponse } from "@/types";
 
 const options: apiOptions = {
   next: { revalidate: 30 },
@@ -44,6 +44,21 @@ export async function getStandings(leagueCode: string): Promise<StandingsRespons
     return data;
   } catch (error) {
     console.error(`Failed to fetch standings for ${leagueCode}:`, error);
+    return null;
+  }
+}
+
+export async function getTopScorers(leagueCode: string): Promise<ScorersResponse | null> {
+  try {
+    const response = await fetch(`https://api.football-data.org/v4/competitions/${leagueCode}/scorers`, options);
+    if (!response.ok) {
+      console.error(`Error fetching scorers for ${leagueCode}: ${response.statusText}`);
+      return null;
+    }
+    const data: ScorersResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`Failed to fetch scorers for ${leagueCode}:`, error);
     return null;
   }
 }

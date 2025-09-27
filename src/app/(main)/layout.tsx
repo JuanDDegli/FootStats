@@ -1,7 +1,7 @@
 // src/app/(main)/layout.tsx
+
 import type React from "react"
 import Sidebar from "@/components/sidebar"
-import StandingsWidget from "@/components/standingsWidget"; // IMPORTAR o novo componente
 
 export default function MainLayout({
   children,
@@ -14,10 +14,12 @@ export default function MainLayout({
         <div className="hidden md:block">
           <Sidebar />
         </div>
-        <div className="flex-1 bg-slate-200 p-6 rounded-lg shadow-sm max-w-full">{children}</div>
-        <div className="w-full md:w-[300px]"> {/* A API pede uma largura mínima de 300px */}
-          <StandingsWidget /> {/* ADICIONAR o novo componente aqui */}
-        </div>
+        {/*
+          AQUI ESTÁ A CORREÇÃO:
+          Adicionamos 'min-w-0' para permitir que este contêiner flexível encolha
+          corretamente, evitando que o conteúdo interno "vaze" e quebre o layout.
+        */}
+        <div className="flex-1 min-w-0">{children}</div>
       </section>
     </main>
   )
