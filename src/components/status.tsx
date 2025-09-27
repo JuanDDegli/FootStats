@@ -306,7 +306,7 @@ const Status = ({
                     {matches.map((match) => (
                       <motion.div
                         key={match.id}
-                        className="border bg-white rounded-lg shadow-md overflow-hidden h-[192px]"
+                        className="border bg-white rounded-lg shadow-md overflow-hidden" 
                         initial={{ scale: 0.98, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.2 }}
