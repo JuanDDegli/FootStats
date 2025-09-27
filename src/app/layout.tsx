@@ -15,10 +15,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white text-textPrimary">
-        <Navbar />
-        {children}
-        <footer className="w-full text-center py-4 bg-gray-100 text-gray-600 ">
+      {/* CORREÇÃO: 
+        1. Adicionamos 'flex flex-col min-h-screen' ao <body>.
+           - 'flex flex-col': Organiza os filhos (conteúdo e rodapé) em uma coluna.
+           - 'min-h-screen': Garante que o body ocupe pelo menos 100% da altura da tela.
+      */}
+      <body className="flex flex-col min-h-screen bg-white text-textPrimary">
+        {/*
+          2. Criamos uma div que envolve o conteúdo principal.
+             - 'flex-1' (ou flex-grow): Faz esta div "crescer" e ocupar todo o espaço 
+               disponível, empurrando o rodapé para baixo.
+        */}
+        <div className="flex-1">
+          <Navbar />
+          {children}
+        </div>
+
+        {/* 3. O rodapé permanece no final, dentro do body. */}
+        <footer className="w-full text-center py-4 bg-gray-100 text-gray-600">
           Design by{" "}
           <span
             className="font-semibold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500
@@ -31,4 +45,3 @@ export default function RootLayout({
     </html>
   )
 }
-

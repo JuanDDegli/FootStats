@@ -14,11 +14,6 @@ export default function MainLayout({
         <div className="hidden md:block">
           <Sidebar />
         </div>
-        {/*
-          AQUI ESTÁ A CORREÇÃO:
-          Adicionamos 'min-w-0' para permitir que este contêiner flexível encolha
-          corretamente, evitando que o conteúdo interno "vaze" e quebre o layout.
-        */}
         <div className="flex-1 min-w-0">{children}</div>
       </section>
     </main>
